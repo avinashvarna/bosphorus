@@ -193,7 +193,9 @@ vector<lbool> SATSolve::solveCNF(const ANF* orig_anf, const ANF& anf,
         exit(-1);
     }
 
-    cout << SAT << endl;
+    if (verbosity) {
+        cout << SAT << endl;
+    }
     if (satisfiable == l_False)
         return vector<lbool>();
 

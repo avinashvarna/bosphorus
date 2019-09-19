@@ -464,7 +464,9 @@ void deduplicate(vector<BoolePolynomial>& learnt)
 void simplify(ANF* anf, vector<BoolePolynomial>& loop_learnt,
               const ANF* orig_anf, const vector<Clause>& cutting_clauses)
 {
-    cout << "c [boshp] Running iterative simplification..." << endl;
+    if (config.verbosity) {
+        cout << "c [boshp] Running iterative simplification..." << endl;
+    }
     bool timeout = (cpuTime() > config.maxTime);
     if (timeout) {
         if (config.verbosity) {
@@ -655,15 +657,17 @@ void solve_by_sat(const ANF* anf, const vector<Clause>& cutting_clauses,
     ofs.close();
 
     //also write to the console
-    size_t num = 0;
-    cout << "v ";
-    for (const lbool lit : sol) {
-        if (lit != l_Undef) {
-            cout << ((lit == l_True) ? "" : "-") << num << " ";
+    if (config.verbosity > 3) {
+        size_t num = 0;
+        cout << "v ";
+        for (const lbool lit : sol) {
+            if (lit != l_Undef) {
+                cout << ((lit == l_True) ? "" : "-") << num << " ";
+            }
+            num++;
         }
-        num++;
+        cout << endl;
     }
-    cout << endl;
 
     if (config.verbosity) {
         cout << "c Wrote solution to '" << config.solutionOutput << "'" << endl;
@@ -736,7 +740,9 @@ int main(int argc, char* argv[])
     #ifdef SATSOLVE_ENABLED
     // Solve processed CNF
     if (config.doSolveSAT) {
-        cout << "Solving by SAT..." << endl;
+        if(config.verbosity) {
+            cout << "Solving by SAT..." << endl;
+        }
         solve_by_sat(anf, cutting_clauses, orig_anf);
     }
     #endif
